@@ -1,0 +1,37 @@
+{
+  "name": "back-end",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon index.js",
+    "start": "node index.js",
+    "migrate": "knex migrate:latest",
+    "rollback": "knex migrate:rollback",
+    "seed": "knex seed:run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Secret-Family-Recipes-3-WebPT/back-end.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Secret-Family-Recipes-3-WebPT/back-end/issues"
+  },
+  "homepage": "https://github.com/Secret-Family-Recipes-3-WebPT/back-end#readme",
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "nodemon": "^2.0.13"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.95.11",
+    "sqlite3": "^5.0.2"
+  }
+}

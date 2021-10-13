@@ -2,7 +2,6 @@ const express = require("express")
 const server = express()
 
 //Routes import
-const authRtr = require("./auth/auth-router")
 const usersRtr = require("./users/users-router")
 const recipesRtr = require("./recipes/recipes-router")
 // end of Routes import
@@ -13,9 +12,7 @@ const helmet = require("helmet")
 server.use(helmet())
 
 // Routes commented out Until We get them done.
-
-// server.use("/api/auth", authRtr)
-// server.use("/api/users", usersRtr)
+   server.use("/api/users", usersRtr)
 // server.use("/api/recipes", recipesRtr)
 
 

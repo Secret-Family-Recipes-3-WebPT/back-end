@@ -1,18 +1,29 @@
 const db = require("../data/db-config") //waiting for actual db-config file's name and location
 
-function findAllRecipes(){
-    return db("recipes")
+function findBy(user_id){
+    return db("recipes as r")
+        .leftJoin("users as u","u.user_id","r.user_id")
+        .leftJoin("categories as c","r.category_id","c.category_id")
+        .where("r.user_id",user_id)
+        .select("u.user_id","u.username","r.title","r.source","c.category")
 }
 
-function findRecipeById(recipe_id){
+function findById(recipe_id){
     return db("recipes as r")
-        .leftJoin("steps as s","r.recipe_id","s.recipe_id")
-        .leftJoin("step-ingredients as si","s.step_id","si.step_id")
-        .leftJoin("ingredients as i","si.ingredient_id","i.ingredient_id")
+        .leftJoin("users as u","u.user_id","r.user_id")
+        .leftJoin("instructions as inst","r.recipe_id","inst.recipe_id")
+        .leftJoin("instruction-ingredients as ii","inst.instruction_id","ii.instruction_id")
+        .leftJoin("ingredients as ingr","ii.ingredient_id","ingr.ingredient_id")
         .leftJoin("categories as c","c.category_id","r.category_id")
         .where("r.recipe_id",recipe_id)
-        .select("s.*","i.ingredient_name","s.instructions","c.category_name")
-
+        .select("u.user_id","u.username","r.title*","r.source","ingr.ingredient_name","inst.instruction_text","inst.instruction_order","c.category")
+        .orderBy("inst.instruction_order")
 }
 
-module.exports = {findAllRecipes,findRecipeById}
+async function insert(recipe, user_id) {
+    const recipeWithUser = {...recipe,user_id:user_id}
+    const [id] = await db("recipes").insert(recipeWithUser)
+    return findById(id)
+}
+
+module.exports = {findBy, findById, insert}

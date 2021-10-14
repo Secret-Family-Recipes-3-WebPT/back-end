@@ -16,6 +16,16 @@ const restricted = (req,res,next) => {
     next()
 }
 
+const checkRecipeId = async (req, res, next) => {
+    const { recipe_id } = req.params
+    const existing = await Recipe.findById(recipe_id)
+    if(!existing) {
+        next({ status: 404, message: `no recipe with id ${recipe_id}!`})
+    } else {
+        next()
+    }
+}
+
 const validateRecipe = async (req, res,next) => {
     const { title, source, category, ingredients, instructions } = req.body
 

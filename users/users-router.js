@@ -10,7 +10,7 @@ router.get("/", (req, res, next) => {
   res.send("<h2>API RUNNING FROM THE UsersROUTER</h2>");
 });
 
-router.post("/register", async (req, res, next) => {
+router.post("/register", async (req, res, next) => { // dont forget to add middleware!
   let user = req.body;
   const hash = bcrypt.hashSync(user.password, 8);
   user.password = hash;

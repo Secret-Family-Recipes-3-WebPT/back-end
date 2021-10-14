@@ -1,6 +1,6 @@
 const db = require("../data/db-config.js") //waiting for actual db-config file's name and location
 
-function findUserById(user_id){
+function findUserById(user_id){ 
     return db("users").where({user_id}).first()
 }
 

@@ -1,7 +1,7 @@
-const db = require("../data/db-config")
+const db = require("../data/db-config") //waiting for actual db-config file's name and location
 
 function findAllRecipes(){
-    return db("recipes as r")
+    return db("recipes")
 }
 
 function findRecipeById(recipe_id){

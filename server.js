@@ -11,9 +11,9 @@ const helmet = require("helmet")
 
 server.use(helmet())
 
-// Routes commented out Until We get them done.
+// Routes 
    server.use("/api/users", usersRtr)
-// server.use("/api/recipes", recipesRtr)
+   server.use("/api/recipes", recipesRtr)
 
 
 server.get("/", (req, res) => {

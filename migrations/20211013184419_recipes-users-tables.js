@@ -12,7 +12,7 @@ exports.up = function(knex) {
     })
 
     .createTable("ingredients", table => {
-        table.increments("ingredients_id")
+        table.increments("ingredient_id")
         table.string("ingredient_name", 128).notNullable()
     })
 
@@ -20,7 +20,7 @@ exports.up = function(knex) {
         table.increments("recipe_id"); // would like timestamp
         table.string("title", 128).notNullable()
         table.string("source", 128)
-        table.integer("category")
+        table.integer("category_id")
             .notNullable()
             .unsigned()
             .references("categories.category_id")
@@ -46,7 +46,7 @@ exports.up = function(knex) {
             .onUpdate("CASCADE")
     })
 
-    .createTable("instruction_ingredient_table", table => {
+    .createTable("instruction_ingredient", table => {
         table.increments("ins_ing_id")
         table.integer("instruction_id")
             .notNullable()
@@ -65,7 +65,7 @@ exports.up = function(knex) {
 
 exports.down = function(knex) {
   return knex.schema
-    .dropTableIfExists("instruction_ingredient_table")
+    .dropTableIfExists("instruction_ingredient")
     .dropTableIfExists("instructions")
     .dropTableIfExists("recipes")
     .dropTableIfExists("ingredients")

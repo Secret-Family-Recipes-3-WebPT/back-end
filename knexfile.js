@@ -4,8 +4,9 @@ module.exports = {
 
   development: {
     client: 'sqlite3',
+    useNullAsDefault: true,
     connection: {
-      filename: './dev.sqlite3'
+      filename: './recipe_user_table.db3'
     }
   },
 
@@ -21,7 +22,7 @@ module.exports = {
       max: 10
     },
     migrations: {
-      tableName: 'knex_migrations'
+      directory: './migrations'
     }
   },
 

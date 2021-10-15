@@ -12,7 +12,7 @@ exports.up = function(knex) {
     })
 
     .createTable("ingredients", table => {
-        table.increments("ingredients_id")
+        table.increments("ingredient_id")
         table.string("ingredient_name", 128).notNullable()
     })
 

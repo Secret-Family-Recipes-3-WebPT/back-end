@@ -1,4 +1,4 @@
-const db = require("../data/db-config.js") //waiting for actual db-config file's name and location
+//const db = require("../data/db-config.js") //waiting for actual db-config file's name and location
 
 function findBy(filter){ 
     return db("users").where(filter).first()

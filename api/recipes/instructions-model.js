@@ -6,12 +6,12 @@ function findBy(recipe_id){
 }
 
 function findById(instruction_id){
-    return db("instructions")      //what else should this function return? 
+    return db("instructions") 
         .where({instruction_id})
         .first()
 }
 
-async function insert(instruction, recipe_id){ // verify recipe_id gets passed in from the router
+async function insert(instruction, recipe_id){
     const instructionWithRecipe = {...instruction, recipe_id: recipe_id}
     const [id] = await db("instructions").insert(instructionWithRecipe)
     return getById(id)

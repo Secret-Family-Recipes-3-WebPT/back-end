@@ -8,29 +8,13 @@ module.exports = {
     connection: {
       filename: './recipe_user_table.db3'
     },
-    // migrations: {
-    //     directory: './migrations'
-    //   }
-    // ,pool: {
-    //     afterCreate: (conn, done) => {
-    //       conn.run('PRAGMA foreign_keys = ON', done)
-    //     },
-    // }
-  },
-
-  staging: {
-    client: 'postgresql',
-    connection: {
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
-    },
-    pool: {
-      min: 2,
-      max: 10
-    },
     migrations: {
-      directory: './migrations'
+        directory: './migrations'
+      }
+    ,pool: {
+        afterCreate: (conn, done) => {
+          conn.run('PRAGMA foreign_keys = ON', done)
+        },
     }
   },
 

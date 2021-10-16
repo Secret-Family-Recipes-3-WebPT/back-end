@@ -1,4 +1,4 @@
-const db = require("../db-config")
+const db = require("../data/db-config")
 
 function findBy(recipe_id){
     return db("instructions")

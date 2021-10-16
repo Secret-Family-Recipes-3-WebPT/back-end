@@ -1,5 +1,5 @@
 
-//const db = require("../data/db-config") //waiting for actual db-config file's name and location
+const db = require("../data/db-config") 
 
 function findBy(user_id){
     return db("recipes as r")

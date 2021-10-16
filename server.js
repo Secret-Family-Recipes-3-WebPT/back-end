@@ -2,8 +2,8 @@ const express = require("express")
 const server = express()
 
 //Routes import
-const usersRtr = require("./users/users-router")
-const recipesRtr = require("./recipes/recipes-router")
+const usersRtr = require("./api/users/users-router")
+const recipesRtr = require("./api/recipes/recipes-router")
 // end of Routes import
 
 const helmet = require("helmet")

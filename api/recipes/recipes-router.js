@@ -12,8 +12,11 @@ router.get("/users/:user_id/recipes", async (req, res, next) => {
     const recipes = await Recipe.findBy(req.params.user_id)
     res.status(200).json(recipes)
 })
+
+//think we'll need a route for a specific recipe in a specific user
+
 router.post("/users/:user_id/recipes", async (req, res, next) => { // add middleware
-    const [id] = await Recipe.insert(req.body)
+    const [id] = await Recipe.insert(req.body, /*add req.params.user_id*/ )
     const newRecipe = await Recipe.findById(id)
     res.status(201).json(newRecipe)
 })

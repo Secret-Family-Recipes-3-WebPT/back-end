@@ -7,6 +7,21 @@ exports.seed = function(knex) {
         {ingredient_name: 'onion'},
         {ingredient_name: 'beef broth'},
         {ingredient_name: 'red wine'},
-        {ingredient_name: 'mozzarella'}
+        {ingredient_name: 'mozzarella'},
+        {ingredient_name: 'flour'},
+        {ingredient_name: 'baking powder'},
+        {ingredient_name: 'lemon zest'},
+        {ingredient_name: 'sugar'},
+        {ingredient_name: 'eggs'},
+        {ingredient_name: 'vanilla extract'},
+        {ingredient_name: 'lemon juice'},
+        {ingredient_name: 'buttermilk'},
+        {ingredient_name: 'sushi rice'},
+        {ingredient_name: 'sushi vinegar'},
+        {ingredient_name: 'smoked salmon'},
+        {ingredient_name: 'cream cheese'},
+        {ingredient_name: 'cucumber'},
+        {ingredient_name: 'nori(seaweed) sheet'},
+        {ingredient_name: 'sesame seeds'},
       ]);
 };

@@ -1,11 +1,11 @@
-const db = require("../data/db-config.js") //waiting for actual db-config file's name and location
+const db = require("../../data/db-config.js") //waiting for actual db-config file's name and location
 
 function findBy(filter){ 
     return db("users").where(filter).first()
 }
 
 function findById(user_id){
-    return ("users").where({user_id}).first()
+    return db("users").where({user_id}).first()
 }
 
 async function add(user){

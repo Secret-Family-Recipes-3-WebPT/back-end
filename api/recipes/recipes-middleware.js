@@ -2,20 +2,6 @@ const Recipe = require("./recipes-model")
 const JwtSecret = process.env.JWT_SECRET || 'fallback'
 const jwt = require('jsonwebtoken')
 
-const restricted = (req,res,next) => {
-    const token = req.headers.authorization
-    if(!token) {
-        next({ status: 401, message: "token required!"})
-    } 
-    jwt.verify(token, JwtSecret, (error, decoded) => {
-        if(error) {
-            next({ status: 401, message: 'Token invalid, either it has timed out or has been tampered with!'})
-        } 
-        req.decoded = decoded
-    })
-    next()
-}
-
 const checkRecipeId = async (req, res, next) => {
     const { recipe_id } = req.params
     const existing = await Recipe.findById(recipe_id)

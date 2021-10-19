@@ -14,7 +14,7 @@ function findById(instruction_id){
 async function insert(instruction, recipe_id){
     const instructionWithRecipe = {...instruction, recipe_id: recipe_id}
     const [id] = await db("instructions").insert(instructionWithRecipe)
-    return getById(id)
+    return findById(id)
 }
 
 module.exports = {findBy, findById, insert}

@@ -30,4 +30,4 @@ const validateRecipe = async (req, res,next) => {
     }
 }
 
-module.exports = { validateRecipe, restricted }
+module.exports = { validateRecipe, checkRecipeId }

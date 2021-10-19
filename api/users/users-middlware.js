@@ -43,11 +43,26 @@ const ValidateLogin = async (req, res, next) => {
   } else if(typeof username !== 'string'){
           res.status(400).json({message: 'username must not be a number!'})
   } else if(!existingUser){
-          res.status(404).json({message:err})
+          res.status(404).json({message: 'User does not exist!'})
   } else {
     req.user = existingUser
     next()
   }
 }
 
-module.exports = { restricted, ValidateLogin, ValidateUserNameUnique}
+const ValidateRegiistration = (req, res, next) => {
+    const { username, password } = req.body
+    if(username === undefined || username.trim() === '') {
+        next({ status: 400, message: 'Please enter a username!'})
+    } else if(username.trim().length < 3) {
+        next({ status: 400, message: 'Username must be at least 3 characters!'})
+    } else if(password === undefined || password.trim() === '') {
+        next({ status: 400, message: 'Please enter a password'})
+    } else if(password.length < 4) {
+        next({ status: 400, message: 'Password must be at least 4 characters!'})
+    } else {
+        next()
+    }
+}
+
+module.exports = { restricted, ValidateLogin, ValidateUserNameUnique, ValidateRegiistration}

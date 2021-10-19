@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const User = require("./users-model");
 const tokenBuilder = require("./token-builder")
-const {ValidateLogin} = require("./users-middlware")
+const {ValidateLogin, ValidateUserNameUnique, ValidateRegiistration} = require("./users-middlware")
 const Recipe = require("../recipes/recipes-model")
 const {restricted} = require("../users/users-middlware")
 
@@ -13,7 +13,7 @@ router.get("/", (req, res, next) => {
   res.send("<h2>API RUNNING FROM THE UsersROUTER</h2>");
 });
 
-router.post("/register", async (req, res, next) => { // dont forget to add middleware!
+router.post("/register", ValidateRegiistration, ValidateUserNameUnique,  async (req, res, next) => {
   let user = req.body;
   const hash = bcrypt.hashSync(user.password, 8);
   user.password = hash;
@@ -25,7 +25,7 @@ router.post("/register", async (req, res, next) => { // dont forget to add middl
   }
 });
 
-router.post("/login", ValidateLogin ,async (req, res, next) => { // dont forget to add middleware!
+router.post("/login", ValidateLogin ,async (req, res, next) => {
   const { password } = req.body;
   const { user } = req; 
   const validUser = bcrypt.compareSync(password, user.password);
@@ -42,10 +42,9 @@ router.get("/:user_id/recipes", restricted, async (req, res, next) => {
     res.status(200).json(recipes)
 })
 
-router.post("/:user_id/recipes", /*restricted,*/async (req, res, next) => { // add middleware
-    const [id] = await Recipe.insert(req.body, req.params.user_id )
-    const newRecipe = await Recipe.findById(id)
-    res.status(201).json(newRecipe)
+router.post("/:user_id/recipes", restricted, async (req, res, next) => {
+    const result = await Recipe.insert(req.body, req.params.user_id )
+    res.status(201).json(result)
 })
 
 module.exports = router;

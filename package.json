@@ -34,5 +34,8 @@
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.11",
     "sqlite3": "^5.0.2"
+  },
+  "resolutions": {
+    "tar": "4.4.18"
   }
 }

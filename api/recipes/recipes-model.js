@@ -1,5 +1,31 @@
 const db = require("../../data/db-config");
 
+async function fetchRecipeInstructions (recipe){
+    const instructionPromise = db("instructions as ins")
+        .where("ins.recipe_id",recipe.recipe_id)
+        .select("ins.instruction_id","ins.instruction_order","ins.instruction_content")
+        .orderBy("ins.instruction_order")      
+        return await instructionPromise.then(instructionList => {
+            recipe.instructions = instructionList
+            return recipe
+        })
+}
+
+async function fetchRecipeIngredients (recipe) {
+    return await db("ingredients as ing")
+        .leftJoin("instruction_ingredient as ii","ing.ingredient_id","ii.ingredient_id")
+        .leftJoin("instructions as ins","ins.instruction_id","ii.instruction_id")
+        .where("ins.recipe_id",recipe.recipe_id)
+        .select("ing.*","ins.instruction_id") 
+}
+
+function setIngredientsInRecipe(recipe,ingredients){
+    recipe.instructions.forEach(instruction => {
+        instruction.ingredients = ingredients.filter(ingredient => ingredient.instruction_id ==instruction.instruction_id)
+    })
+    return recipe
+}
+
 function findBy(user_id) {
   return db("recipes as r")
     .leftJoin("users as u", "u.user_id", "r.user_id")
@@ -9,40 +35,34 @@ function findBy(user_id) {
 }
 
 async function findById(recipe_id) {
-  const data = await db("recipes as r")
+  const recipePromise = db("recipes as r")
     .leftJoin("users as u", "u.user_id", "r.user_id")
-    .leftJoin("instructions as inst", "r.recipe_id", "inst.recipe_id")
-    .leftJoin(
-      "instruction_ingredient as ii",
-      "inst.instruction_id",
-      "ii.instruction_id"
-    )
-    .leftJoin("ingredients as ingr", "ii.ingredient_id", "ingr.ingredient_id")
-    .leftJoin("categories as c", "c.category_id", "r.category_id")
     .where("r.recipe_id", recipe_id)
     .select(
       "u.user_id",
       "u.username",
+      "r.recipe_id",
       "r.title",
       "r.source",
-      "ingr.ingredient_name",
-      "inst.instruction_content",
-      "inst.instruction_order",
-      "c.category"
+      "r.category_id"
     )
-    .orderBy("inst.instruction_order");
-
-    const result = {
-        user_id: data[0].user_id,
-        username: data[0].username,
-        title: data[0].title,
-        source: data[0].source,
-        category: data[0].category,
-        //instructions: data.map(row => ({ instruction_order: row.instruction_order, directions: row.instruction_content, ingredients: row.ingredient_name}))
+    .first();
+    
+    return await recipePromise.then(dbRecipe => {
+        return {
+            "user_id": dbRecipe.user_id,
+            "username": dbRecipe.username,
+            "recipe_id": dbRecipe.recipe_id,
+            "title": dbRecipe.title,
+            "source": dbRecipe.source,
+            "category": dbRecipe.category_id,
+            "instructions":[]
+        }               
+    })
+    .then(recipe => fetchRecipeInstructions(recipe))
+    .then(recipe => fetchRecipeIngredients(recipe)
+    .then(ingredients => setIngredientsInRecipe(recipe,ingredients)))
     }
-     //return data
-    return result
-}
 
 async function insert(recipe, user_id) {
   const recipeWithUser = { ...recipe, user_id: user_id };

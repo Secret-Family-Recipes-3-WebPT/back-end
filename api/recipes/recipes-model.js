@@ -77,23 +77,6 @@ async function insert(recipe, user_id) {
             const [category_id] = await trx('categories').insert({ category: category })
             category_id_to_use = category_id
         }
-        instructions.map(async (instruction) => {
-            const {
-                instruction_content, 
-                instruction_order,
-                ingredients
-            } = instruction
-            await trx("instructions").insert({  
-                instruction_content,
-                instruction_order,
-                recipe_id: created_recipe_id
-            }) 
-            if(ingredients){
-                ingredients.map(async (ingredient) => {
-                    await trx("ingredients").insert({ingredient_name: ingredient})
-                })
-            }
-        })
         const [recipe_id] = await trx("recipes")
             .insert({
                 title,
@@ -102,11 +85,29 @@ async function insert(recipe, user_id) {
                 user_id
             })
         created_recipe_id = recipe_id
+       
+        for(let i=0; i<instructions.length; i++){
+            const {instruction_content,instruction_order} = instructions[i]
+            const [instruction_id] = await trx("instructions").insert({  
+                instruction_content,
+                instruction_order,
+                recipe_id: created_recipe_id
+            })
+            for(let j=0; j<instructions[i].ingredients.length ; j++){
+                const ingredient = instructions[i].ingredients[j]
+                const [existingIngredient] = await trx("ingredients").where("ingredient_name",ingredient)
+                if (existingIngredient) {
+                    ingredient_id_to_use = existingIngredient.ingredient_id
+                } else {
+                    const [ingredient_id] = await trx('ingredients').insert({ ingredient_name: ingredient })
+                    ingredient_id_to_use = ingredient_id
+                }
+                await trx("instruction_ingredient").insert({instruction_id,ingredient_id: ingredient_id_to_use})
+            }
+            
+        }
     })
     return findById(created_recipe_id)
-//   const recipeWithUser = { ...recipe, user_id: user_id };
-//   const [id] = await db("recipes").insert(recipeWithUser);
-//   return findById(id);
 }
 
 module.exports = { findBy, findById, insert };

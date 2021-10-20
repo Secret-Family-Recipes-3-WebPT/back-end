@@ -43,8 +43,13 @@ router.get("/:user_id/recipes", restricted, async (req, res, next) => {
 })
 
 router.post("/:user_id/recipes", restricted, async (req, res, next) => {
-    const result = await Recipe.insert(req.body, req.params.user_id )
-    res.status(201).json(result)
+    try{
+        const result = await Recipe.insert(req.body, req.params.user_id )
+        res.status(201).json(result)
+    }catch(error){
+        next(error)
+    }
+    
 })
 
 module.exports = router;

@@ -37,6 +37,7 @@ function findBy(user_id) {
 async function findById(recipe_id) {
   const recipePromise = db("recipes as r")
     .leftJoin("users as u", "u.user_id", "r.user_id")
+    .leftJoin("categories as c","c.category_id","r.category_id")
     .where("r.recipe_id", recipe_id)
     .select(
       "u.user_id",
@@ -44,7 +45,7 @@ async function findById(recipe_id) {
       "r.recipe_id",
       "r.title",
       "r.source",
-      "r.category_id"
+      "c.category"
     )
     .first();
     
@@ -55,7 +56,7 @@ async function findById(recipe_id) {
             "recipe_id": dbRecipe.recipe_id,
             "title": dbRecipe.title,
             "source": dbRecipe.source,
-            "category": dbRecipe.category_id,
+            "category": dbRecipe.category,
             "instructions":[]
         }               
     })
@@ -65,9 +66,47 @@ async function findById(recipe_id) {
     }
 
 async function insert(recipe, user_id) {
-  const recipeWithUser = { ...recipe, user_id: user_id };
-  const [id] = await db("recipes").insert(recipeWithUser);
-  return findById(id);
+    const {title,source,category,instructions} = recipe
+    let created_recipe_id
+    await db.transaction(async trx => {
+        let category_id_to_use
+        const [existingCategory] = await trx("categories").where("category",category)
+        if (existingCategory) {
+            category_id_to_use = existingCategory.category_id
+        } else {
+            const [category_id] = await trx('categories').insert({ category: category })
+            category_id_to_use = category_id
+        }
+        instructions.map(async (instruction) => {
+            const {
+                instruction_content, 
+                instruction_order,
+                ingredients
+            } = instruction
+            await trx("instructions").insert({  
+                instruction_content,
+                instruction_order,
+                recipe_id: created_recipe_id
+            }) 
+            if(ingredients){
+                ingredients.map(async (ingredient) => {
+                    await trx("ingredients").insert({ingredient_name: ingredient})
+                })
+            }
+        })
+        const [recipe_id] = await trx("recipes")
+            .insert({
+                title,
+                source,
+                category_id: category_id_to_use,
+                user_id
+            })
+        created_recipe_id = recipe_id
+    })
+    return findById(created_recipe_id)
+//   const recipeWithUser = { ...recipe, user_id: user_id };
+//   const [id] = await db("recipes").insert(recipeWithUser);
+//   return findById(id);
 }
 
 module.exports = { findBy, findById, insert };

@@ -4,8 +4,10 @@ const jwt = require('jsonwebtoken')
 
 const checkRecipeId = async (req, res, next) => {
     const { recipe_id } = req.params
-    const existing = await Recipe.findById(recipe_id)
-    if(!existing) {
+     
+    const existing = await Recipe.findRecipeById(recipe_id)
+   console.log(existing)
+    if(existing === undefined) {
         next({ status: 404, message: `no recipe with id ${recipe_id}!`})
     } else {
         next()

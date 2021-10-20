@@ -50,6 +50,7 @@ function findRecipeById(id) {
 async function findById(recipe_id) {
   const recipePromise = db("recipes as r")
     .leftJoin("users as u", "u.user_id", "r.user_id")
+    .leftJoin("categories as c","c.category_id","r.category_id")
     .where("r.recipe_id", recipe_id)
     .select(
       "u.user_id",
@@ -57,10 +58,9 @@ async function findById(recipe_id) {
       "r.recipe_id",
       "r.title",
       "r.source",
-      "r.category_id"
+      "c.category"
     )
     .first();
-
   return await recipePromise
     .then((dbRecipe) => {
       return {
@@ -82,9 +82,48 @@ async function findById(recipe_id) {
 }
 
 async function insert(recipe, user_id) {
-  const recipeWithUser = { ...recipe, user_id: user_id };
-  const [id] = await db("recipes").insert(recipeWithUser);
-  return findById(id);
+    const {title,source,category,instructions} = recipe
+    let created_recipe_id
+    await db.transaction(async trx => {
+        let category_id_to_use
+        const [existingCategory] = await trx("categories").where("category",category)
+        if (existingCategory) {
+            category_id_to_use = existingCategory.category_id
+        } else {
+            const [category_id] = await trx('categories').insert({ category: category })
+            category_id_to_use = category_id
+        }
+        const [recipe_id] = await trx("recipes")
+            .insert({
+                title,
+                source,
+                category_id: category_id_to_use,
+                user_id
+            })
+        created_recipe_id = recipe_id
+       
+        for(let i=0; i<instructions.length; i++){
+            const {instruction_content,instruction_order} = instructions[i]
+            const [instruction_id] = await trx("instructions").insert({  
+                instruction_content,
+                instruction_order,
+                recipe_id: created_recipe_id
+            })
+            for(let j=0; j<instructions[i].ingredients.length ; j++){
+                const ingredient = instructions[i].ingredients[j]
+                const [existingIngredient] = await trx("ingredients").where("ingredient_name",ingredient)
+                if (existingIngredient) {
+                    ingredient_id_to_use = existingIngredient.ingredient_id
+                } else {
+                    const [ingredient_id] = await trx('ingredients').insert({ ingredient_name: ingredient })
+                    ingredient_id_to_use = ingredient_id
+                }
+                await trx("instruction_ingredient").insert({instruction_id,ingredient_id: ingredient_id_to_use})
+            }
+            
+        }
+    })
+    return findById(created_recipe_id)
 }
 
 async function remove(id) {

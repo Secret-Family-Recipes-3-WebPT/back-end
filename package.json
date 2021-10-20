@@ -4,12 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon index.js",
     "start": "node index.js",
     "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
-    "seed": "knex seed:run"
+    "seed": "knex seed:run",
+    "migrateh": "heroku run knex migrate:latest -a secret-family-recipes-app",
+    "rollbackh": "heroku run knex migrate:rollback -a secret-family-recipes-app",
+    "databaseh": "heroku pg:psql -a secret-family-recipes-app",
+    "seedh": "heroku run knex seed:run -a secret-family-recipes-app",
+    "test": "cross-env NODE_ENV=testing jest --watchAll --verbose --runInBand",
+    "deploy": "git push heroku main"
   },
   "repository": {
     "type": "git",

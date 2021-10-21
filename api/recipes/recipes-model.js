@@ -90,7 +90,7 @@ async function insert(recipe, user_id) {
         if (existingCategory) {
             category_id_to_use = existingCategory.category_id
         } else {
-            const [category_id] = await trx('categories').insert({ category: category })
+            const [category_id] = await trx('categories').insert({ category: category },"category_id")
             category_id_to_use = category_id
         }
         const [recipe_id] = await trx("recipes")
@@ -99,7 +99,7 @@ async function insert(recipe, user_id) {
                 source,
                 category_id: category_id_to_use,
                 user_id
-            })
+            },"recipe_id")
         created_recipe_id = recipe_id
        
         for(let i=0; i<instructions.length; i++){
@@ -108,7 +108,7 @@ async function insert(recipe, user_id) {
                 instruction_content,
                 instruction_order,
                 recipe_id: created_recipe_id
-            })
+            },"instruction_id")
             for(let j=0; j<instructions[i].ingredients.length ; j++){
                 const ingredient = instructions[i].ingredients[j]
                 const [existingIngredient] = await trx("ingredients").where("ingredient_name",ingredient)
@@ -116,7 +116,7 @@ async function insert(recipe, user_id) {
                 if (existingIngredient) {
                     ingredient_id_to_use = existingIngredient.ingredient_id
                 } else {
-                    const [ingredient_id] = await trx('ingredients').insert({ ingredient_name: ingredient })
+                    const [ingredient_id] = await trx('ingredients').insert({ ingredient_name: ingredient },"ingredient_id")
                     ingredient_id_to_use = ingredient_id
                 }
                 await trx("instruction_ingredient").insert({instruction_id,ingredient_id: ingredient_id_to_use})

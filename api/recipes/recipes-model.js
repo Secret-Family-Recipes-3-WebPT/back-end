@@ -69,7 +69,7 @@ async function findById(recipe_id) {
         recipe_id: dbRecipe.recipe_id,
         title: dbRecipe.title,
         source: dbRecipe.source,
-        category: dbRecipe.category_id,
+        category: dbRecipe.category,
         instructions: [],
       };
     })

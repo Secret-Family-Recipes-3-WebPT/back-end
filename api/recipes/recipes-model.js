@@ -69,7 +69,7 @@ async function findById(recipe_id) {
         recipe_id: dbRecipe.recipe_id,
         title: dbRecipe.title,
         source: dbRecipe.source,
-        category: dbRecipe.category_id,
+        category: dbRecipe.category,
         instructions: [],
       };
     })
@@ -90,16 +90,15 @@ async function insert(recipe, user_id) {
         if (existingCategory) {
             category_id_to_use = existingCategory.category_id
         } else {
-            const [category_id] = await trx('categories').insert({ category: category })
+            const [category_id] = await trx('categories').insert({ category: category },"category_id")
             category_id_to_use = category_id
         }
-        const [recipe_id] = await trx("recipes")
-            .insert({
+        const [recipe_id] = await trx("recipes").insert({
                 title,
                 source,
                 category_id: category_id_to_use,
                 user_id
-            })
+            },"recipe_id")
         created_recipe_id = recipe_id
        
         for(let i=0; i<instructions.length; i++){
@@ -108,21 +107,20 @@ async function insert(recipe, user_id) {
                 instruction_content,
                 instruction_order,
                 recipe_id: created_recipe_id
-            })
-            let ingredient_id_to_use
+            },"instruction_id")
             for(let j=0; j<instructions[i].ingredients.length ; j++){
                 const ingredient = instructions[i].ingredients[j]
                 const [existingIngredient] = await trx("ingredients").where("ingredient_name",ingredient)
+                let ingredient_id_to_use
                 if (existingIngredient) {
                     ingredient_id_to_use = existingIngredient.ingredient_id
                 } else {
-                    const [ingredient_id] = await trx('ingredients').insert({ ingredient_name: ingredient })
+                    const [ingredient_id] = await trx('ingredients').insert({ ingredient_name: ingredient },"ingredient_id")
                     ingredient_id_to_use = ingredient_id
                 }
                 await trx("instruction_ingredient").insert({instruction_id,ingredient_id: ingredient_id_to_use})
-            }
-            
-        }
+            }    
+        }    
     })
     return findById(created_recipe_id)
 }

@@ -9,9 +9,8 @@ function findById(user_id){
 }
 
 async function add(user){
-    const [user_id] = await db("users").insert(user)
+    const [user_id] = await db("users").insert(user,"user_id")
     return findById(user_id)
 }
-
 
 module.exports = {findBy,findById,add}

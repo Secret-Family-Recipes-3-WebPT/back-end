@@ -14,7 +14,11 @@
     "databaseh": "heroku pg:psql -a secret-family-recipes-app",
     "seedh": "heroku run knex seed:run -a secret-family-recipes-app",
     "test": "cross-env NODE_ENV=testing jest --watchAll --verbose --runInBand",
-    "deploy": "git push heroku main"
+    "deploy": "git push heroku postgres-testing"
+  },
+  "engines":{
+    "node": "14.16.1",
+    "npm": "7.23.0"
   },
   "repository": {
     "type": "git",

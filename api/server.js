@@ -1,6 +1,6 @@
 const express = require("express")
 const server = express()
-
+const cors = require("cors")
 //Routes import
 const usersRtr = require("./users/users-router")
 const recipesRtr = require("./recipes/recipes-router")
@@ -9,7 +9,9 @@ const recipesRtr = require("./recipes/recipes-router")
 const helmet = require("helmet")
 
 
+server.use(cors())
 server.use(helmet())
+
 
 // Routes 
    server.use("/api/users", usersRtr)

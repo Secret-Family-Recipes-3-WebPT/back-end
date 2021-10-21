@@ -93,8 +93,7 @@ async function insert(recipe, user_id) {
             const [category_id] = await trx('categories').insert({ category: category },"category_id")
             category_id_to_use = category_id
         }
-        const [recipe_id] = await trx("recipes")
-            .insert({
+        const [recipe_id] = await trx("recipes").insert({
                 title,
                 source,
                 category_id: category_id_to_use,
@@ -120,9 +119,8 @@ async function insert(recipe, user_id) {
                     ingredient_id_to_use = ingredient_id
                 }
                 await trx("instruction_ingredient").insert({instruction_id,ingredient_id: ingredient_id_to_use})
-            }
-            
-        }
+            }    
+        }    
     })
     return findById(created_recipe_id)
 }

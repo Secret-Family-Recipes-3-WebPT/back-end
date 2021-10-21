@@ -2,7 +2,7 @@
 exports.up = function(knex) {
     return knex.schema
     .createTable("users", table => {
-        table.increments("user_id"); // would like timestamp
+        table.increments("user_id");
         table.string("username", 128).notNullable().unique();
         table.string("password", 256).notNullable()
     })
@@ -17,7 +17,7 @@ exports.up = function(knex) {
     })
 
     .createTable("recipes", table => {
-        table.increments("recipe_id"); // would like timestamp
+        table.increments("recipe_id");
         table.string("title", 128).notNullable()
         table.string("source", 128)
         table.integer("category_id")

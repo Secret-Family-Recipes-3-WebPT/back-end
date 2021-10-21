@@ -109,6 +109,7 @@ async function insert(recipe, user_id) {
                 instruction_order,
                 recipe_id: created_recipe_id
             })
+            let ingredient_id_to_use
             for(let j=0; j<instructions[i].ingredients.length ; j++){
                 const ingredient = instructions[i].ingredients[j]
                 const [existingIngredient] = await trx("ingredients").where("ingredient_name",ingredient)

@@ -2,7 +2,7 @@
 const dotenv = require("dotenv")
 dotenv.config()
 //
-const server = require("./server")
+const server = require("./api/server")
 
 const port = process.env.PORT || 8080
 

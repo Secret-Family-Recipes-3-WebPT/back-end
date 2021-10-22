@@ -11,12 +11,13 @@ const helmet = require("helmet")
 const path = require("path")
 
 const corsOptions ={
-    origin:'http://localhost:3000', 
+    origin: false,
+    methods:['GET', 'POST', 'PUT', 'DELETE'] ,
     credentials:true,            //access-control-allow-credentials:true
     optionSuccessStatus:200
 }
 const server = express()
-server.use(cors())
+server.use(cors(corsOptions))
 server.use(helmet())
 server.use(express.json()) 
 

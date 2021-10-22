@@ -1,5 +1,5 @@
 const express = require("express")
-const server = express()
+
 const cors = require("cors")
 //Routes import
 const usersRtr = require("./users/users-router")
@@ -15,11 +15,10 @@ const corsOptions ={
     credentials:true,            //access-control-allow-credentials:true
     optionSuccessStatus:200
 }
-
+const server = express()
 server.use(cors(corsOptions))
 server.use(helmet())
-server.use(express.json()) // according to Dave Kidd, this is needed if we are going to be making body requests. I may have misunderstood its true use. 53:50
-server.use(express.static(path.join(__dirname,"front-end/front-end-work"))) // not sure if this one is will work 1:34:00 DaveKidd
+server.use(express.json()) 
 
 
 // Routes 

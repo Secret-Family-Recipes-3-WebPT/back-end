@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const Recipe = require("./recipes-model")
-router.use(express.json())
 const {checkRecipeId} = require("./recipes-middleware")
 const {restricted} = require("../users/users-middlware")
 

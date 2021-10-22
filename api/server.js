@@ -11,7 +11,7 @@ const helmet = require("helmet")
 const path = require("path")
 
 const corsOptions ={
-    origin: false,
+    origin: "*",
     methods:['GET', 'POST', 'PUT', 'DELETE'] ,
     credentials:true,            //access-control-allow-credentials:true
     optionSuccessStatus:200

@@ -16,7 +16,7 @@ const corsOptions ={
     optionSuccessStatus:200
 }
 const server = express()
-server.use(cors(corsOptions))
+server.use(cors())
 server.use(helmet())
 server.use(express.json()) 
 
